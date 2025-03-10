@@ -1,28 +1,16 @@
 'use client'
 
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {useState} from "react";
+import {Dispatch, SetStateAction} from "react";
 
 type StatusCardProps = {
     status: { id: number, name: string };
+    tasks: {name: string, status: number}[];
+    setTasks:Dispatch<SetStateAction<{name: string, status: number }[]>>
 }
 
-export default function StatusCard ({status}: StatusCardProps) {
-    const [tasks, setTasks] = useState([{
-        name: 'Task 1',
-        status: 0
-    },
-        {
-            name: 'Task 2',
-            status: 3
-        },
-        {
-            name: 'gettt',
-            status: 1
-        }
-    ]
-    )
-    console.log(tasks)
+export default function StatusCard ({status, tasks, setTasks}: StatusCardProps) {
+
     return (
         <Card className={'h-[60vh] w-[20vw]'}>
             <CardHeader className={'md: text-lg lg:text-xl sm: text-md text-blue-200 flex items-center justify-center '}>
@@ -40,9 +28,11 @@ export default function StatusCard ({status}: StatusCardProps) {
                        <div className={'flex gap-1 max-w-10 lg:max-w-fit sm:max-w-15'}>
                             {/*// left-arrow*/}
                            <svg onClick={() => {
-                               const newTasks = tasks
-                               newTasks[index].status = newTasks[index].status-1
-                               setTasks(newTasks)
+                               if(status.id !== 0) {
+                                   const newTasks = [...tasks]
+                                   newTasks[index].status = newTasks[index].status - 1
+                                   setTasks(newTasks)
+                               }
                            }}
                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={24} height={24} color={"#7ed321"} fill={"none"}>
                                 <path d="M3.99982 11.9998L19.9998 11.9998" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -50,9 +40,11 @@ export default function StatusCard ({status}: StatusCardProps) {
                             </svg>
                             {/*//right-arrow*/}
                             <svg onClick={() => {
-                                const newTasks = tasks
+                                if(status.id < 3) {
+                                const newTasks = [...tasks]
                                 newTasks[index].status = newTasks[index].status+1
                                 setTasks(newTasks)
+                                }
                             }}
                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={24} height={24} color={"#66af1b"} fill={"none"}>
                                 <path d="M20.0001 11.9998L4.00012 11.9998" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -60,7 +52,9 @@ export default function StatusCard ({status}: StatusCardProps) {
                             </svg>
                             {/*delete*/}
                             <svg onClick={() => {
-                                console.log(1)
+                                const shallowTasks = [...tasks]
+                                shallowTasks.splice(index, 1)
+                                setTasks(shallowTasks)
                             }}
                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={24} height={24} color={"#d0021b"} fill={"none"}>
                                 <path d="M19.5 5.5L18.8803 15.5251C18.7219 18.0864 18.6428 19.3671 18.0008 20.2879C17.6833 20.7431 17.2747 21.1273 16.8007 21.416C15.8421 22 14.559 22 11.9927 22C9.42312 22 8.1383 22 7.17905 21.4149C6.7048 21.1257 6.296 20.7408 5.97868 20.2848C5.33688 19.3626 5.25945 18.0801 5.10461 15.5152L4.5 5.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
