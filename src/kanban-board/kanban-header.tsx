@@ -13,9 +13,23 @@ export default function KanbanHeader({tasks, setTasks}: KanbanHeaderProps) {
     // aq unda iyos taskis sheqmna
     const [taskName, setTaskName] = useState("");
 
+    const addTask = () => {
+        if(taskName.length > 0 && taskName.trim() !== "") {
+            const shallowTasks = [...tasks];
+            shallowTasks.push({name: taskName, status: 0});
+            setTasks(shallowTasks);
+        }
+        setTaskName("")
+    }
+
     return (
         <div className={'bg-amber-500 h-[120px] flex gap-5 justify-center items-center text-3xl'}>
             <Input value={taskName}
+                   onKeyUp={(event) => {
+                       if (event.key === "Enter") {
+                           addTask();
+                       }
+                   }}
                onChange={
                 (event) => {
                     if(event.target.hasOwnProperty('value'))
@@ -23,12 +37,8 @@ export default function KanbanHeader({tasks, setTasks}: KanbanHeaderProps) {
                 }
             } placeholder={'Enter your task'} className={'w-[200px]'}></Input>
             <Button onClick={() => {
-                if(taskName.length > 0 && taskName.trim() !== "") {
-                    const shallowTasks = [...tasks];
-                    shallowTasks.push({name: taskName, status: 0});
-                    setTasks(shallowTasks);
-                }
-                setTaskName("")
+                addTask();
+
             }} className={'hover:bg-green-900'}>Add Task</Button>
         </div>
     )

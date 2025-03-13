@@ -12,16 +12,35 @@ type StatusCardProps = {
 export default function StatusCard ({status, tasks, setTasks}: StatusCardProps) {
 
     return (
-        <Card className={'h-[60vh] w-[20vw]'}>
+        <Card className={'h-[60vh] min-w-[20vw]'}>
             <CardHeader className={'md: text-lg lg:text-xl sm: text-md text-blue-200 flex items-center justify-center '}>
                 <CardTitle>
                     {status.name}
                 </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent
+                onDragOver={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                }}
+
+                onDrop={(event) => {
+                    const tempArray: {name: string, status: number}[] = []
+                    for (let i = 0; i < tasks.length; i++) {
+                        if (tasks[i].name === event.dataTransfer.getData('name')) {
+                            tasks[i].status = status.id
+                        }
+                        tempArray.push(tasks[i])
+                    }
+                    setTasks(tempArray);
+                }
+            }
+                className={'min-h-full'}>
                 {tasks.map((task, index) => {
                     return (
-                        status.id === task.status && <div key={index} className={'flex justify-between'}>
+                        status.id === task.status && <div draggable={true} key={index} onDragStart={(event) => {
+                            event.dataTransfer.setData('name', task.name)
+                        }} className={'bg-blue-700 items-center h-20 my-2 flex justify-between'}>
                        <div>
                            {task.name}
                        </div>
